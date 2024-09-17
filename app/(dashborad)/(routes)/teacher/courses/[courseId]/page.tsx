@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { TitleForm } from "./_components/title-form";
 import { DescriptionForm } from "./_components/description-form";
+import { ImageForm } from "./_components/image-form";
 
 export default async function CourseIdPage({
   params,
@@ -57,9 +58,16 @@ export default async function CourseIdPage({
             <IconBadge icon={LayoutDashboardIcon} />
             <h2 className="text-xl">Customize your course</h2>
           </div>
-          <TitleForm initialData={course} courseId={course.id} />
+          <TitleForm
+            initialData={{ title: course.title }}
+            courseId={course.id}
+          />
           <DescriptionForm
-            initialData={{ description: course.description || "" }}
+            initialData={{ description: course.description || undefined }}
+            courseId={course.id}
+          />
+          <ImageForm
+            initialData={{ imageUrl: course.imageUrl || undefined }}
             courseId={course.id}
           />
         </div>

@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 
 interface DescriptionFormProps {
   initialData: {
-    description: string;
+    description?: string;
   };
   courseId: number;
 }
@@ -39,7 +39,7 @@ export const DescriptionForm = ({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData,
+    defaultValues: { description: initialData.description || "" },
   });
 
   const { isSubmitting, isValid } = form.formState;
