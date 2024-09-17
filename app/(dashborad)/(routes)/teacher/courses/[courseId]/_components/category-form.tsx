@@ -16,38 +16,47 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
+import { Combobox } from "@/components/ui/combobox";
 import { cn } from "@/lib/utils";
 
-interface DescriptionFormProps {
+interface CategoryFormProps {
   initialData: {
-    description?: string;
+    categoryId?: number;
   };
   courseId: number;
+  options: { label: string; value: string }[];
 }
 
 const formSchema = z.object({
-  description: z.string().min(1, { message: "Description is required" }),
+  categoryId: z.string().min(1),
 });
 
-export const DescriptionForm = ({
+export const CategoryForm = ({
   initialData,
   courseId,
-}: DescriptionFormProps) => {
+  options,
+}: CategoryFormProps) => {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { description: initialData.description || "" },
+    defaultValues: {
+      categoryId:
+        initialData.categoryId !== undefined
+          ? String(initialData.categoryId)
+          : "",
+    },
   });
 
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Course description updated");
+      await axios.patch(`/api/courses/${courseId}`, {
+        categoryId: Number(values.categoryId),
+      });
+      toast.success("Course category updated");
       toggleEdit();
       router.refresh();
     } catch (error) {
@@ -59,17 +68,21 @@ export const DescriptionForm = ({
     setIsEditing(!isEditing);
   };
 
+  const selectedOption = options.find(
+    (option) => option.value === String(initialData.categoryId)
+  );
+
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course description
+        Course category
         <Button onClick={toggleEdit} variant="ghost">
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
               <Pencil className="h-4 w-4 mr-2" />
-              Edit description
+              Edit category
             </>
           )}
         </Button>
@@ -78,10 +91,10 @@ export const DescriptionForm = ({
         <p
           className={cn(
             "text-sm mt-2",
-            !initialData.description && "text-slate-500 italic"
+            !initialData.categoryId && "text-slate-500 italic"
           )}
         >
-          {initialData.description || "No description"}
+          {selectedOption?.label || "No category"}
         </p>
       )}
       {isEditing && (
@@ -92,16 +105,11 @@ export const DescriptionForm = ({
           >
             <FormField
               control={form.control}
-              name="description"
+              name="categoryId"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea
-                      disabled={isSubmitting}
-                      placeholder="e.g. 'This course is about...'"
-                      className="bg-white"
-                      {...field}
-                    />
+                    <Combobox options={[...options]} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

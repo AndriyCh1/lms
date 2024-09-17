@@ -6,6 +6,7 @@ import { auth } from "@clerk/nextjs/server";
 import { TitleForm } from "./_components/title-form";
 import { DescriptionForm } from "./_components/description-form";
 import { ImageForm } from "./_components/image-form";
+import { CategoryForm } from "./_components/category-form";
 
 export default async function CourseIdPage({
   params,
@@ -22,6 +23,12 @@ export default async function CourseIdPage({
     where: {
       id: Number(params.courseId),
       userId,
+    },
+  });
+
+  const categories = await db.category.findMany({
+    orderBy: {
+      name: "asc",
     },
   });
 
@@ -69,6 +76,14 @@ export default async function CourseIdPage({
           <ImageForm
             initialData={{ imageUrl: course.imageUrl || undefined }}
             courseId={course.id}
+          />
+          <CategoryForm
+            initialData={{ categoryId: course.categoryId || undefined }}
+            courseId={course.id}
+            options={categories.map((category) => ({
+              label: category.name,
+              value: String(category.id),
+            }))}
           />
         </div>
       </div>
