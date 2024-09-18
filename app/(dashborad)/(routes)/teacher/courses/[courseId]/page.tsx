@@ -1,4 +1,8 @@
-import { LayoutDashboardIcon } from "lucide-react";
+import {
+  CircleDollarSign,
+  LayoutDashboardIcon,
+  ListChecks,
+} from "lucide-react";
 import { redirect } from "next/navigation";
 import { IconBadge } from "@/components/icon-badge";
 import { db } from "@/lib/db";
@@ -7,6 +11,7 @@ import { TitleForm } from "./_components/title-form";
 import { DescriptionForm } from "./_components/description-form";
 import { ImageForm } from "./_components/image-form";
 import { CategoryForm } from "./_components/category-form";
+import { PriceForm } from "./_components/price-form";
 
 export default async function CourseIdPage({
   params,
@@ -85,6 +90,25 @@ export default async function CourseIdPage({
               value: String(category.id),
             }))}
           />
+        </div>
+        <div className="space-y-6">
+          <div>
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={ListChecks} />
+              <h2 className="text-xl">Course chapters</h2>
+            </div>
+            <div>TODO: Add chapters</div>
+          </div>
+          <div>
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={CircleDollarSign} />
+              <h2 className="text-xl">Sell your course</h2>
+            </div>
+            <PriceForm
+              courseId={course.id}
+              initialData={{ price: course.price || undefined }}
+            />
+          </div>
         </div>
       </div>
     </div>
