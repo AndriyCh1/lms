@@ -21,8 +21,10 @@ model Course {
 
   attachments Attachment[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Chapter   Chapter[]
+  Purchase  Purchase[]
 
   @@index([title]) // TODO: Add GIN/Trigram index for fulltext search
 }
@@ -42,6 +44,76 @@ model Attachment {
 
   courseId Int
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Chapter {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String? @db.Text
+  videoUrl    String? @db.Text
+  position    Int
+  isPublished Boolean @default(false)
+  isFree      Boolean @default(false)
+
+  muxData MuxData?
+
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  userProgress UserProgress[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MuxData {
+  id Int @id @default(autoincrement())
+
+  assetId    String
+  playbackId String?
+
+  chapterId Int     @unique
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+}
+
+model UserProgress {
+  id Int @id @default(autoincrement())
+
+  userId Int
+
+  chapterId Int
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  isCompleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, chapterId])
+}
+
+model Purchase {
+  id Int @id @default(autoincrement())
+
+  userId Int
+
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@unique([userId, courseId])
+}
+
+model StripeCustomer {
+  id Int @id @default(autoincrement())
+
+  userId           String @unique
+  stripeCustomerId String @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
