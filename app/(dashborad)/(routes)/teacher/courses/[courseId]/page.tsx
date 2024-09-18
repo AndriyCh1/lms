@@ -1,5 +1,6 @@
 import {
   CircleDollarSign,
+  File,
   LayoutDashboardIcon,
   ListChecks,
 } from "lucide-react";
@@ -12,6 +13,7 @@ import { DescriptionForm } from "./_components/description-form";
 import { ImageForm } from "./_components/image-form";
 import { CategoryForm } from "./_components/category-form";
 import { PriceForm } from "./_components/price-form";
+import { AttachmentForm } from "./_components/attachment-form";
 
 export default async function CourseIdPage({
   params,
@@ -28,6 +30,13 @@ export default async function CourseIdPage({
     where: {
       id: Number(params.courseId),
       userId,
+    },
+    include: {
+      attachments: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
     },
   });
 
@@ -108,6 +117,13 @@ export default async function CourseIdPage({
               courseId={course.id}
               initialData={{ price: course.price || undefined }}
             />
+          </div>
+          <div>
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={File} />
+              <h2 className="text-xl">Resources & attachments</h2>
+            </div>
+            <AttachmentForm initialData={course} courseId={course.id} />
           </div>
         </div>
       </div>
