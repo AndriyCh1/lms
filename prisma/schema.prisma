@@ -20,11 +20,11 @@ model Course {
   category   Category? @relation(fields: [categoryId], references: [id])
 
   attachments Attachment[]
+  chapters    Chapter[]
+  purchases   Purchase[]
 
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  Chapter   Chapter[]
-  Purchase  Purchase[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([title]) // TODO: Add GIN/Trigram index for fulltext search
 }
