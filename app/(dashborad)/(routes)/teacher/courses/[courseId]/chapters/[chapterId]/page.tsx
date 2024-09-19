@@ -5,12 +5,16 @@ import { ArrowLeft, Eye, LayoutDashboard, Video } from "lucide-react";
 import { IconBadge } from "@/components/icon-badge";
 import { db } from "@/lib/db";
 import { ChapterTitleForm } from "./_components/chapter-title-form";
+import { ChapterDescriptionForm } from "./_components/chapter-description-form";
 
 export default async function ChapterIdPage({
   params,
 }: {
   params: { courseId: string; chapterId: string };
 }) {
+  const courseId = Number(params.courseId);
+  const chapterId = Number(params.chapterId);
+
   const { userId } = auth();
 
   if (!userId) {
@@ -19,8 +23,8 @@ export default async function ChapterIdPage({
 
   const chapter = await db.chapter.findUnique({
     where: {
-      id: +params.chapterId,
-      courseId: +params.courseId,
+      id: chapterId,
+      courseId: courseId,
     },
     include: {
       muxData: true,
@@ -41,7 +45,7 @@ export default async function ChapterIdPage({
       <div className="flex items-center justify-between">
         <div className="w-full">
           <Link
-            href={`/teacher/courses/${params.courseId}`}
+            href={`/teacher/courses/${courseId}`}
             className="flex items-center text-sm hover:opacity-75 transition mb-6"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -66,8 +70,13 @@ export default async function ChapterIdPage({
             </div>
             <ChapterTitleForm
               initialData={chapter}
-              courseId={params.courseId}
-              chapterId={params.chapterId}
+              courseId={courseId}
+              chapterId={chapterId}
+            />
+            <ChapterDescriptionForm
+              initialData={{ description: chapter.description || undefined }}
+              courseId={courseId}
+              chapterId={chapterId}
             />
           </div>
           <div>
@@ -75,6 +84,11 @@ export default async function ChapterIdPage({
               <IconBadge icon={Eye} />
               <h2 className="text-xl">Access Settings</h2>
             </div>
+            {/* <ChapterAccessForm
+              initialData={chapter}
+              courseId={params.courseId}
+              chapterId={params.chapterId}
+            /> */}
           </div>
         </div>
         <div>
@@ -82,6 +96,11 @@ export default async function ChapterIdPage({
             <IconBadge icon={Video} />
             <h2 className="text-xl">Add a video</h2>
           </div>
+          {/* <ChapterVideoForm
+            initialData={chapter}
+            chapterId={params.chapterId}
+            courseId={params.courseId}
+          /> */}
         </div>
       </div>
     </div>
