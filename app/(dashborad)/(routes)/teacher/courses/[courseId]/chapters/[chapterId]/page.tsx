@@ -6,6 +6,7 @@ import { IconBadge } from "@/components/icon-badge";
 import { db } from "@/lib/db";
 import { ChapterTitleForm } from "./_components/chapter-title-form";
 import { ChapterDescriptionForm } from "./_components/chapter-description-form";
+import { ChapterAccessForm } from "./_components/chapter-access-form";
 
 export default async function ChapterIdPage({
   params,
@@ -84,11 +85,11 @@ export default async function ChapterIdPage({
               <IconBadge icon={Eye} />
               <h2 className="text-xl">Access Settings</h2>
             </div>
-            {/* <ChapterAccessForm
-              initialData={chapter}
-              courseId={params.courseId}
-              chapterId={params.chapterId}
-            /> */}
+            <ChapterAccessForm
+              initialData={{ isFree: !!chapter.isFree }}
+              courseId={courseId}
+              chapterId={chapterId}
+            />
           </div>
         </div>
         <div>
