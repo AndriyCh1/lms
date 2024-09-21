@@ -7,7 +7,6 @@ export async function PATCH(
   req: Request,
   { params }: { params: { courseId: string; chapterId: string } }
 ) {
-  console.log("[PUBLISH_CHAPTER]", params);
   try {
     const { userId } = auth();
 
