@@ -38,13 +38,6 @@ export async function PATCH(
       },
     });
 
-    console.log({
-      chapter,
-      muxData,
-      chapterTitle: chapter?.title,
-      chapterDescription: chapter?.description,
-      chapterVideoUrl: chapter?.videoUrl,
-    });
     if (
       !chapter ||
       !muxData ||

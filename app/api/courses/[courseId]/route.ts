@@ -37,17 +37,13 @@ export async function DELETE(
       return new NextResponse("Not found", { status: 404 });
     }
 
-    const deleteChapterVideoPromises = await Promise.allSettled(
+    await Promise.allSettled(
       course.chapters.map((chapter) => {
         if (chapter.muxData?.assetId) {
           return video.assets.delete(chapter.muxData.assetId);
         }
       })
     );
-
-    if (deleteChapterVideoPromises.some((p) => p.status === "rejected")) {
-      return new NextResponse("Internal Error", { status: 500 });
-    }
 
     const deletedCourse = await db.course.delete({
       where: {
