@@ -82,7 +82,7 @@ model MuxData {
 model UserProgress {
   id Int @id @default(autoincrement())
 
-  userId Int
+  userId String
 
   chapterId Int
   chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
@@ -98,7 +98,7 @@ model UserProgress {
 model Purchase {
   id Int @id @default(autoincrement())
 
-  userId Int
+  userId String
 
   courseId Int
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
